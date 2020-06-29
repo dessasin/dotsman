@@ -1,17 +1,28 @@
 #!/bin/bash
 backupPath=/mnt/Yedek/Bacups/dotsmanager
-proccess=0
-echo "Change Proccess "
+proccess=5
+echo -e "\n
+
+##--------------------##
+|                      |
+| Welcome To Dotsman   |
+|                      |
+##--------------------##
+|                      |
+| Please change your   |
+|      proccess        |
+|                      |
+##--------------------##
+|                      |
+| 0.) Install Apps     |
+| 1.) Restore Files    |
+| 2.) Backup Files     |
+| Press Enter For Exit |
+|                      |
+##--------------------##
+\n"
+
 read proccess
-
-
-appsInstall(){
-
-sudo apt install tilix gnome-tweak-tool alacarte python-nautilus gparted gnome-mpv zsh rhythmbox flameshot plank git neovim curl simplescreenrecorder steam unrar fonts-powerline -y
-sudo sed -i 's/NoDisplay=true/NoDisplay=false/g' /etc/xdg/autostart/*.desktop  #show hidden startups
-sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" -y
-}
-
 
 backup(){
 echo "System Bacup Starting"
@@ -29,8 +40,8 @@ cp -f $HOME/.config/ufetch.sh $backupPath
 cp -f $HOME/.wakatime.cfg $backupPath 
 dconf dump / > $backupPath/gnome-backup.dconf
 }
-restore(){
 
+restore(){
 echo "System File Restore Starting"
 cp -r $backupPath/nvim $HOME/.config
 cp -r $backupPath/alacritty $HOME/.config
@@ -49,14 +60,22 @@ dconf load / < $backupPath/gnome-backup.dconf
 echo "System Files Restored"
 }
 
+appsInstall(){
+sudo apt install tilix gnome-tweak-tool alacarte python-nautilus gparted gnome-mpv zsh rhythmbox flameshot plank git neovim curl simplescreenrecorder steam unrar fonts-powerline -y
+sudo sed -i 's/NoDisplay=true/NoDisplay=false/g' /etc/xdg/autostart/*.desktop  #show hidden startups
+sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" -y
+}
+
+
 if [[ $proccess -eq 0 ]]; then
   appsInstall
   echo "Applications Installed"
-   elif [[ proccess -eq 1 ]]; then
-    restore
-echo "System Restore Finished"
+elif [[ proccess -eq 1 ]]; then
+  restore
+  echo "System Restore Finished"
 elif [[ $proccess -eq 2 ]]; then
   backup
-echo "System Bacup Finished"
-
+  echo "System Bacup Finished"
+  else
+    exit
 fi
